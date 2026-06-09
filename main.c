@@ -1,35 +1,23 @@
-/*
- * =============================================================
- *  Menu-Driven 2D Graphics Editor in C
- *  Syllabus: Advanced C Programming with Generative AI
- *  Canvas : 25 rows x 60 cols
- *  '_' = empty space    '*' = drawn pixel
- * =============================================================
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
-/* ── Simple constants (macros only) ── */
 #define ROWS                    25
 #define COLS                    60
 #define INITIAL_OBJECT_CAPACITY 20
 #define MAX_TYPE_LENGTH         20
 
-/* ── Graphic Object Structure ── */
 struct GraphicObject {
     int  id;
-    char type[MAX_TYPE_LENGTH];  /* "Line", "Rectangle", "Circle", "Triangle" */
-    int  x1, y1;                 /* start / top-left / centre                 */
-    int  x2, y2;                 /* end   / bottom-right                      */
-    int  x3, y3;                 /* third vertex (triangle only)              */
-    int  radius;                 /* circle only                               */
-    int  active;                 /* 1 = visible, 0 = deleted                  */
+    char type[MAX_TYPE_LENGTH];
+    int  x1, y1;
+    int  x2, y2;
+    int  x3, y3;
+    int  radius;
+    int  active;
 };
 
-/* ── Function Prototypes ── */
 void initializeCanvas(char canvas[ROWS][COLS]);
 void displayCanvas(char canvas[ROWS][COLS]);
 void clearCanvas(char canvas[ROWS][COLS]);
@@ -50,11 +38,6 @@ int  compareString(char str1[], char str2[]);
 int  safeInputInteger(void);
 void menu(void);
 
-/* =============================================================
- *  CANVAS FUNCTIONS
- * ============================================================= */
-
-/* Fill every cell with '_' */
 void initializeCanvas(char canvas[ROWS][COLS]) {
     int r, c;
     for (r = 0; r < ROWS; r++)
@@ -62,7 +45,6 @@ void initializeCanvas(char canvas[ROWS][COLS]) {
             canvas[r][c] = '_';
 }
 
-/* Print canvas with column/row rulers */
 void displayCanvas(char canvas[ROWS][COLS]) {
     int r, c;
     printf("\n   ");
@@ -80,28 +62,20 @@ void displayCanvas(char canvas[ROWS][COLS]) {
     printf("+\n\n");
 }
 
-/* Reset canvas to all underscores */
 void clearCanvas(char canvas[ROWS][COLS]) {
     initializeCanvas(canvas);
     printf("  Canvas cleared.\n");
 }
 
-/* =============================================================
- *  DRAWING FUNCTIONS
- * ============================================================= */
-
-/* Bounds check: x is column, y is row */
 int isValidPoint(int x, int y) {
     return (x >= 0 && x < COLS && y >= 0 && y < ROWS);
 }
 
-/* Plot a single '*' at (column x, row y) */
 void plotPoint(char canvas[ROWS][COLS], int x, int y) {
     if (isValidPoint(x, y))
         canvas[y][x] = '*';
 }
 
-/* Step-based line drawing using floating-point increments */
 void drawLine(char canvas[ROWS][COLS], int x1, int y1, int x2, int y2) {
     int   dx    = abs(x2 - x1);
     int   dy    = abs(y2 - y1);
@@ -123,15 +97,13 @@ void drawLine(char canvas[ROWS][COLS], int x1, int y1, int x2, int y2) {
     }
 }
 
-/* Four sides built from drawLine calls */
 void drawRectangle(char canvas[ROWS][COLS], int x1, int y1, int x2, int y2) {
-    drawLine(canvas, x1, y1, x2, y1); /* top    */
-    drawLine(canvas, x1, y2, x2, y2); /* bottom */
-    drawLine(canvas, x1, y1, x1, y2); /* left   */
-    drawLine(canvas, x2, y1, x2, y2); /* right  */
+    drawLine(canvas, x1, y1, x2, y1);
+    drawLine(canvas, x1, y2, x2, y2);
+    drawLine(canvas, x1, y1, x1, y2);
+    drawLine(canvas, x2, y1, x2, y2);
 }
 
-/* Equation-based circle: plot at every integer degree */
 void drawCircle(char canvas[ROWS][COLS], int cx, int cy, int radius) {
     int   angle;
     float rad;
@@ -142,14 +114,12 @@ void drawCircle(char canvas[ROWS][COLS], int cx, int cy, int radius) {
     }
 }
 
-/* Triangle = three drawLine calls */
 void drawTriangle(char canvas[ROWS][COLS], int x1, int y1, int x2, int y2, int x3, int y3) {
     drawLine(canvas, x1, y1, x2, y2);
     drawLine(canvas, x2, y2, x3, y3);
     drawLine(canvas, x3, y3, x1, y1);
 }
 
-/* Re-initialise canvas, then repaint every active object */
 void redrawCanvas(char canvas[ROWS][COLS], struct GraphicObject objects[], int count) {
     int i;
     initializeCanvas(canvas);
@@ -168,18 +138,12 @@ void redrawCanvas(char canvas[ROWS][COLS], struct GraphicObject objects[], int c
     }
 }
 
-/* =============================================================
- *  OBJECT MANAGEMENT FUNCTIONS
- * ============================================================= */
-
-/* Add a new object; realloc when array is full */
 void addObject(char canvas[ROWS][COLS], struct GraphicObject **objects,
                int *count, int *capacity, int *nextId) {
     int choice;
     struct GraphicObject  obj;
     struct GraphicObject *temp;
 
-    /* Expand with realloc when capacity is reached */
     if (*count >= *capacity) {
         *capacity *= 2;
         temp = (struct GraphicObject *)realloc(*objects,
@@ -237,7 +201,6 @@ void addObject(char canvas[ROWS][COLS], struct GraphicObject **objects,
     printf("  Object ID=%d (%s) added successfully.\n", obj.id, obj.type);
 }
 
-/* Mark object inactive (soft delete), then redraw */
 void deleteObject(char canvas[ROWS][COLS], struct GraphicObject objects[], int count) {
     int id, i, found = 0;
     if (count == 0) { printf("  No objects to delete.\n"); return; }
@@ -257,7 +220,6 @@ void deleteObject(char canvas[ROWS][COLS], struct GraphicObject objects[], int c
     printf("  Object ID=%d deleted.\n", id);
 }
 
-/* Update an object's parameters and redraw the canvas */
 void modifyObject(char canvas[ROWS][COLS], struct GraphicObject objects[], int count) {
     int id, i, found = 0;
     if (count == 0) { printf("  No objects to modify.\n"); return; }
@@ -268,7 +230,7 @@ void modifyObject(char canvas[ROWS][COLS], struct GraphicObject objects[], int c
     for (i = 0; i < count; i++) {
         if (objects[i].active && objects[i].id == id) {
             found = 1;
-            printf("  Modifying %s (ID=%d) — enter new parameters:\n", objects[i].type, id);
+            printf("  Modifying %s (ID=%d) - enter new parameters:\n", objects[i].type, id);
             if (compareString(objects[i].type, "Line") == 0 ||
                 compareString(objects[i].type, "Rectangle") == 0) {
                 printf("  x1: "); objects[i].x1 = safeInputInteger();
@@ -295,7 +257,6 @@ void modifyObject(char canvas[ROWS][COLS], struct GraphicObject objects[], int c
     printf("  Object ID=%d modified successfully.\n", id);
 }
 
-/* Print a table of all active objects */
 void listObjects(struct GraphicObject objects[], int count) {
     int i, found = 0;
     printf("\n  %-4s %-12s %-38s\n", "ID", "Type", "Parameters");
@@ -319,11 +280,6 @@ void listObjects(struct GraphicObject objects[], int count) {
     printf("\n");
 }
 
-/* =============================================================
- *  FILE HANDLING FUNCTIONS
- * ============================================================= */
-
-/* Save current canvas rows to canvas.txt */
 void saveCanvasToFile(char canvas[ROWS][COLS]) {
     int r, c;
     FILE *fp = fopen("canvas.txt", "w");
@@ -337,7 +293,6 @@ void saveCanvasToFile(char canvas[ROWS][COLS]) {
     fclose(fp);
 }
 
-/* Load canvas.txt back into the canvas array */
 void loadCanvasFromFile(char canvas[ROWS][COLS]) {
     char line[COLS + 5];
     int  r = 0, c;
@@ -355,11 +310,6 @@ void loadCanvasFromFile(char canvas[ROWS][COLS]) {
     fclose(fp);
 }
 
-/* =============================================================
- *  UTILITY FUNCTIONS
- * ============================================================= */
-
-/* User-defined string comparison (avoids strcmp dependency) */
 int compareString(char str1[], char str2[]) {
     int i = 0;
     while (str1[i] != '\0' && str2[i] != '\0') {
@@ -369,17 +319,15 @@ int compareString(char str1[], char str2[]) {
     return (int)str1[i] - (int)str2[i];
 }
 
-/* Read one integer; loop on invalid input (call by value return) */
 int safeInputInteger(void) {
     int val;
     while (scanf("%d", &val) != 1) {
-        while (getchar() != '\n');       /* flush bad characters */
+        while (getchar() != '\n');
         printf("  Invalid input. Enter a number: ");
     }
     return val;
 }
 
-/* Print the main menu */
 void menu(void) {
     printf("\n+----------------------------------+\n");
     printf("|   2D Graphics Editor in C        |\n");
@@ -397,10 +345,6 @@ void menu(void) {
     printf("  Choice: ");
 }
 
-/* =============================================================
- *  MAIN
- * ============================================================= */
-
 int main(void) {
     char canvas[ROWS][COLS];
     struct GraphicObject *objects;
@@ -409,7 +353,6 @@ int main(void) {
     int nextId   = 1;
     int choice;
 
-    /* Initial allocation using calloc (zero-initialised) */
     objects = (struct GraphicObject *)calloc((size_t)capacity,
                sizeof(struct GraphicObject));
     if (objects == NULL) {
@@ -434,7 +377,7 @@ int main(void) {
             case 7: saveCanvasToFile(canvas);                                      break;
             case 8: loadCanvasFromFile(canvas);                                    break;
             case 9:
-                free(objects);   /* release dynamic memory before exit */
+                free(objects);
                 printf("\n  Goodbye!\n\n");
                 return 0;
             default:
