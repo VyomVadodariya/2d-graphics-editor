@@ -1,0 +1,212 @@
+You are an expert C programming project developer and GitHub automation assistant.
+
+Create a complete C mini-project strictly based on my syllabus: Advanced C Programming with Generative AI.
+
+PROJECT TITLE:
+Menu-Driven 2D Graphics Editor in C
+
+PROBLEM STATEMENT:
+Design and implement a menu-driven 2D Graphics Editor in C using a 2D character array as the drawing canvas.
+
+The canvas must initially be filled with `_` underscore characters.
+All graphical objects must be drawn using `*` asterisk characters.
+
+The editor must allow the user to:
+
+1. Add objects
+2. Delete objects
+3. Modify objects
+4. Display the picture
+5. Save the picture to a file
+6. Load the picture from a file
+7. Clear the canvas
+8. Exit safely
+
+OBJECTS TO SUPPORT:
+
+1. Line
+2. Rectangle
+3. Circle
+4. Triangle
+
+STRICT SYLLABUS LIMITATION:
+Use ONLY these C concepts:
+
+* Basic C syntax
+* Arrays
+* 2D arrays
+* Functions
+* Function prototypes
+* Local and global scope
+* Call by value
+* Call by reference
+* Structures
+* Array of structures
+* Passing arrays to functions
+* Passing structures to functions
+* Passing array of structures to functions
+* Pointers
+* Dynamic memory allocation using malloc, calloc, realloc, free
+* Strings
+* User-defined string logic
+* File handling using fopen, fprintf, fgets, fclose
+* Error checking using feof and ferror
+* Standard C input/output
+* Basic math operations
+* Error handling through conditions
+
+DO NOT USE:
+
+* ncurses
+* graphics.h
+* SDL
+* OpenGL
+* linked lists
+* recursion
+* enum
+* typedef
+* function pointers
+* bitwise operators
+* advanced macros beyond simple constants
+* command-line arguments
+* external libraries
+* compiler-specific features
+* complex data structures not in syllabus
+
+CODE SIZE:
+The final main.c code should be approximately 300 to 400 lines.
+Keep it suitable for a second-semester Advanced C Programming mini-project.
+
+PROJECT FILES TO CREATE:
+
+1. main.c
+2. README.md
+3. Makefile
+
+MAIN.C REQUIREMENTS:
+Use only standard libraries:
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+Use these simple macros:
+#define ROWS 25
+#define COLS 60
+#define INITIAL_OBJECT_CAPACITY 20
+#define MAX_TYPE_LENGTH 20
+
+Use a structure:
+struct GraphicObject {
+int id;
+char type[MAX_TYPE_LENGTH];
+int x1, y1;
+int x2, y2;
+int x3, y3;
+int radius;
+int active;
+};
+
+The program must include these functions or similar:
+
+* void initializeCanvas(char canvas[ROWS][COLS]);
+* void displayCanvas(char canvas[ROWS][COLS]);
+* void clearCanvas(char canvas[ROWS][COLS]);
+* int isValidPoint(int x, int y);
+* void plotPoint(char canvas[ROWS][COLS], int x, int y);
+* void drawLine(char canvas[ROWS][COLS], int x1, int y1, int x2, int y2);
+* void drawRectangle(char canvas[ROWS][COLS], int x1, int y1, int x2, int y2);
+* void drawCircle(char canvas[ROWS][COLS], int centerX, int centerY, int radius);
+* void drawTriangle(char canvas[ROWS][COLS], int x1, int y1, int x2, int y2, int x3, int y3);
+* void redrawCanvas(char canvas[ROWS][COLS], struct GraphicObject objects[], int count);
+* void addObject(char canvas[ROWS][COLS], struct GraphicObject **objects, int *count, int *capacity, int *nextId);
+* void deleteObject(char canvas[ROWS][COLS], struct GraphicObject objects[], int count);
+* void modifyObject(char canvas[ROWS][COLS], struct GraphicObject objects[], int count);
+* void listObjects(struct GraphicObject objects[], int count);
+* void saveCanvasToFile(char canvas[ROWS][COLS]);
+* void loadCanvasFromFile(char canvas[ROWS][COLS]);
+* int compareString(char str1[], char str2[]);
+* int safeInputInteger();
+* void menu();
+
+PROGRAM LOGIC:
+
+* Store all objects in a dynamically allocated array of structures.
+* Use calloc initially.
+* Use realloc when the object array is full.
+* Use free before exiting.
+* Every object must have a unique ID.
+* Delete should not physically remove the object; it should set active = 0.
+* Modify should ask for object ID, update details, and redraw the canvas.
+* Redraw should clear the canvas and redraw all active objects.
+* File save should store only the final canvas picture.
+* File load should load the saved canvas picture.
+* Use simple coordinate validation.
+
+MENU:
+
+1. Display Canvas
+2. Add Object
+3. Delete Object
+4. Modify Object
+5. List Objects
+6. Clear Canvas
+7. Save Canvas to File
+8. Load Canvas from File
+9. Exit
+
+DRAWING METHODS:
+
+* Line: use simple step-based line drawing using floating-point increments.
+* Rectangle: draw borders using drawLine.
+* Triangle: draw three lines using drawLine.
+* Circle: use simple equation-based plotting or midpoint-style logic, but keep it understandable.
+
+README.MD REQUIREMENTS:
+Include:
+
+* Project title
+* Problem statement
+* Syllabus concepts used
+* Features
+* File structure
+* Compile command
+* Run command
+* Menu explanation
+* Example usage
+* GitHub submission notes
+
+MAKEFILE REQUIREMENTS:
+Include:
+
+* make
+* make run
+* make clean
+
+GITHUB AUTOMATION:
+After creating files:
+
+1. Compile with GCC.
+2. Fix all errors.
+3. Run basic test.
+4. Initialize git if needed.
+5. Add all files.
+6. Commit with message:
+   "Add syllabus-based 2D graphics editor in C"
+7. Push to my GitHub repository.
+
+Before pushing:
+
+* Check if remote origin exists.
+* If origin exists, push to it.
+* If origin does not exist, ask me for my GitHub repository URL.
+* Use main branch unless another branch is already active.
+
+FINAL OUTPUT:
+After completing, show:
+
+1. Files created
+2. Compile result
+3. Run result
+4. Git commit result
+5. GitHub push status
